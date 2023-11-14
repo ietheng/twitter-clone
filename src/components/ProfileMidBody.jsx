@@ -1,6 +1,6 @@
 import { Button, Col, Image, Nav, Row, Spinner } from "react-bootstrap";
 import ProfilePostCard from "./ProfilePostCard";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { fetchPostsByUser } from "../features/posts/postsSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,9 +18,9 @@ export default function ProfileMidBody() {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
-      const decodedToken = jwt_decode(token);
+      const decodedToken = jwtDecode(token);
       const userId = decodedToken.id;
-      dispatchEvent(fetchPostsByUser(userId));
+      dispatch(fetchPostsByUser(userId));
     }
   }, [dispatch]);
 
@@ -83,13 +83,14 @@ export default function ProfileMidBody() {
       {loading && (
         <Spinner animation="border" className="ms-3 mt-3" variant="primary" />
       )}
-      {posts.map((post) => (
-        <ProfilePostCard
-          key={post.id}
-          content={post.content}
-          postId={post.id}
-        />
-      ))}
+      {posts.length > 0 &&
+        posts.map((post) => (
+          <ProfilePostCard
+            key={post.id}
+            content={post.content}
+            postId={post.id}
+          />
+        ))}
     </Col>
   );
 }
