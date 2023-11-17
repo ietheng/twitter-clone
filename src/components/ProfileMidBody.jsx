@@ -1,9 +1,10 @@
 import { Button, Col, Image, Nav, Row, Spinner } from "react-bootstrap";
 import ProfilePostCard from "./ProfilePostCard";
-import { jwtDecode } from "jwt-decode";
-import { useEffect } from "react";
+// import { jwtDecode } from "jwt-decode";
+import { useContext, useEffect } from "react";
 import { fetchPostsByUser } from "../features/posts/postsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { AuthContext } from "./AuthProvider";
 
 export default function ProfileMidBody() {
   const url =
@@ -14,15 +15,17 @@ export default function ProfileMidBody() {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
   const loading = useSelector((state) => state.posts.loading);
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.id;
-      dispatch(fetchPostsByUser(userId));
-    }
-  }, [dispatch]);
+    dispatch(fetchPostsByUser(currentUser.uid));
+    // const token = localStorage.getItem("authToken");
+    // if (token) {
+    //   const decodedToken = jwtDecode(token);
+    //   const userId = decodedToken.id;
+    //   dispatch(fetchPostsByUser(userId));
+    // }
+  }, [dispatch, currentUser]);
 
   return (
     <Col sm={6} className="bg-light" style={{ border: "1px solid lightgrey" }}>
@@ -87,8 +90,8 @@ export default function ProfileMidBody() {
         posts.map((post) => (
           <ProfilePostCard
             key={post.id}
-            content={post.content}
-            postId={post.id}
+            // content={post.content}
+            post={post}
           />
         ))}
     </Col>
