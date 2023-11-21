@@ -27,7 +27,9 @@ export default function AuthPage() {
   const provider = new GoogleAuthProvider();
 
   useEffect(() => {
-    if (currentUser) navigate("/profile");
+    if (currentUser) {
+      navigate("/profile");
+    }
   }, [currentUser, navigate]);
 
   const handleSignUp = async (e) => {
