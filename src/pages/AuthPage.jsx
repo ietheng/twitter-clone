@@ -24,7 +24,6 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const auth = getAuth();
   const { currentUser } = useContext(AuthContext);
-  const provider = new GoogleAuthProvider();
 
   useEffect(() => {
     if (currentUser) {
@@ -35,12 +34,12 @@ export default function AuthPage() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const res = await createUserWithEmailAndPassword(
+      const response = await createUserWithEmailAndPassword(
         auth,
         username,
         password
       );
-      console.log(res.user);
+      console.log(response.user);
     } catch (error) {
       console.error(error);
     }
@@ -55,16 +54,16 @@ export default function AuthPage() {
     }
   };
 
-  const handleGoogleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleClose = () => setModalShow(null);
+
+  const provider = new GoogleAuthProvider();
+  const handleGoogleLogin = async () => {
+    // e.preventDefault();
+    // try {
+    await signInWithPopup(auth, provider);
+    // } catch (error) {
+    //   console.error(error);
+  };
 
   return (
     <Row>
