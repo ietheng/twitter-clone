@@ -2,26 +2,23 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import {
-  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
 import { AuthContext } from "../components/AuthProvider";
 
 export default function AuthPage() {
   const loginImage = "https://sig1.co/img-twitter-1";
-  // const url = "https://auth-back-end-ietheng.sigma-school-full-stack.repl.co";
   const [modalShow, setModalShow] = useState(null);
   const handleShowSignUp = () => setModalShow("SignUp");
   const handleShowLogin = () => setModalShow("Login");
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [authToken, setAuthToken] = useLocalStorage("authToken", "");
-
   const navigate = useNavigate();
+
   const auth = getAuth();
   const { currentUser } = useContext(AuthContext);
 
@@ -57,12 +54,15 @@ export default function AuthPage() {
   const handleClose = () => setModalShow(null);
 
   const provider = new GoogleAuthProvider();
-  const handleGoogleLogin = async () => {
-    // e.preventDefault();
-    // try {
-    await signInWithPopup(auth, provider);
-    // } catch (error) {
-    //   console.error(error);
+  provider.setCustomParameters({ prompt: "select_account" });
+
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
